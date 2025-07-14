@@ -1,0 +1,17 @@
+import React, { useState } from 'react'; import { Card, CardContent } from '@/components/ui/card'; import { Button } from '@/components/ui/button'; import { Input } from '@/components/ui/input';
+
+export default function EnzoBet() { const [loggedIn, setLoggedIn] = useState(false); const [username, setUsername] = useState(''); const [balance, setBalance] = useState(10000); const [betAmount, setBetAmount] = useState(''); const [history, setHistory] = useState([]);
+
+const games = [ { name: 'Crash', odds: 2.5 }, { name: 'Roleta', odds: 1.8 }, { name: 'Slot Machine', odds: 3.2 }, { name: '21 (Blackjack)', odds: 2.0 }, ];
+
+const handleLogin = () => { if (username.trim()) setLoggedIn(true); };
+
+const handleAddFunds = () => { setBalance(balance + 10000); };
+
+const placeBet = (game) => { const amount = parseFloat(betAmount); if (!isNaN(amount) && amount > 0) { const win = Math.random() > 0.5; const result = win ? amount * game.odds : -amount; setBalance(balance + result); setHistory([ { game: game.name, amount, result, win, timestamp: new Date() }, ...history, ]); setBetAmount(''); } };
+
+if (!loggedIn) { return ( <div className="min-h-screen flex items-center justify-center bg-red-900 text-white"> <div className="p-8 bg-red-800 rounded-xl shadow-xl space-y-4 w-80"> <h1 className="text-2xl font-bold text-center">EnzoBet</h1> <Input placeholder="Seu nome de usuário" value={username} onChange={(e) => setUsername(e.target.value)} /> <Button className="w-full bg-red-600 hover:bg-red-700" onClick={handleLogin}> Entrar </Button> </div> </div> ); }
+
+return ( <div className="min-h-screen bg-red-950 text-white p-4"> <h1 className="text-3xl font-bold text-center mb-6">Bem-vindo ao EnzoBet, {username}!</h1> <div className="flex flex-col items-center gap-4"> <div className="text-lg">Saldo: <span className="font-bold">R$ {balance.toFixed(2)}</span></div> <Button className="bg-red-600 hover:bg-red-700" onClick={handleAddFunds}>Adicionar R$10.000</Button> <Input type="number" placeholder="Valor da aposta" className="w-64 text-black" value={betAmount} onChange={(e) => setBetAmount(e.target.value)} /> </div
+
+)}
